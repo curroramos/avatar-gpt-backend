@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "soundFile": "/home/curro/avagptar/r3f-virtual-girlfriend-backend/audios/message_0.wav",
+    "duration": 0.65
+  },
+  "mouthCues": [
+    { "start": 0.00, "end": 0.05, "value": "B" },
+    { "start": 0.05, "end": 0.10, "value": "D" },
+    { "start": 0.10, "end": 0.24, "value": "B" },
+    { "start": 0.24, "end": 0.38, "value": "C" },
+    { "start": 0.38, "end": 0.52, "value": "B" },
+    { "start": 0.52, "end": 0.65, "value": "X" }
+  ]
+}
