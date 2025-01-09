@@ -1,14 +1,18 @@
 {
   "metadata": {
-    "soundFile": "/home/curro/avagptar/r3f-virtual-girlfriend-backend/audios/message_0.wav",
-    "duration": 0.65
+    "soundFile": "/home/curro/avatar-gpt-backend/audios/message_0.wav",
+    "duration": 1.20
   },
   "mouthCues": [
-    { "start": 0.00, "end": 0.05, "value": "B" },
-    { "start": 0.05, "end": 0.10, "value": "D" },
-    { "start": 0.10, "end": 0.24, "value": "B" },
-    { "start": 0.24, "end": 0.38, "value": "C" },
-    { "start": 0.38, "end": 0.52, "value": "B" },
-    { "start": 0.52, "end": 0.65, "value": "X" }
+    { "start": 0.00, "end": 0.04, "value": "X" },
+    { "start": 0.04, "end": 0.18, "value": "B" },
+    { "start": 0.18, "end": 0.26, "value": "A" },
+    { "start": 0.26, "end": 0.38, "value": "C" },
+    { "start": 0.38, "end": 0.46, "value": "A" },
+    { "start": 0.46, "end": 0.64, "value": "C" },
+    { "start": 0.64, "end": 0.78, "value": "D" },
+    { "start": 0.78, "end": 0.99, "value": "B" },
+    { "start": 0.99, "end": 1.13, "value": "E" },
+    { "start": 1.13, "end": 1.20, "value": "X" }
   ]
 }

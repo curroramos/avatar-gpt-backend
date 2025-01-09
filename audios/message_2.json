@@ -1,0 +1,14 @@
+{
+  "metadata": {
+    "soundFile": "/home/curro/avatar-gpt-backend/audios/message_2.wav",
+    "duration": 1.33
+  },
+  "mouthCues": [
+    { "start": 0.00, "end": 0.03, "value": "X" },
+    { "start": 0.03, "end": 0.68, "value": "B" },
+    { "start": 0.68, "end": 0.75, "value": "C" },
+    { "start": 0.75, "end": 0.83, "value": "A" },
+    { "start": 0.83, "end": 1.24, "value": "B" },
+    { "start": 1.24, "end": 1.33, "value": "X" }
+  ]
+}

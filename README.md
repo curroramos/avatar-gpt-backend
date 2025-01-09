@@ -16,3 +16,10 @@ Start the development server with
 yarn
 yarn dev
 ```
+
+
+## To improve:
+- fix add messages of the assistant also
+- Add conversation by voice
+- Send message one by one
+- Add memory to the conversation (maintain certain things as Name, etc.)

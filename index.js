@@ -76,37 +76,45 @@ app.post("/chat", async (req, res) => {
 
     if (!userMessage) {
         console.log("No user message provided, sending default response...");
-        res.send({
-            messages: [
-                {
-                    text: "Hey dear... How was your day?",
-                    audio: await audioFileToBase64("audios/intro_0.wav"),
-                    lipsync: await readJsonTranscript("audios/intro_0.json"),
-                    facialExpression: "smile",
-                    animation: "Talking_1",
-                },
-                {
-                    text: "I missed you so much... Please don't go for so long!",
-                    audio: await audioFileToBase64("audios/intro_1.wav"),
-                    lipsync: await readJsonTranscript("audios/intro_1.json"),
-                    facialExpression: "sad",
-                    animation: "Crying",
-                },
-            ],
+        const defaultMessages = [
+            {
+                text: "Hey dear... How was your day?",
+                audio: await audioFileToBase64("audios/intro_0.wav"),
+                lipsync: await readJsonTranscript("audios/intro_0.json"),
+                facialExpression: "smile",
+                animation: "Talking_1",
+            },
+            {
+                text: "I missed you so much... Please don't go for so long!",
+                audio: await audioFileToBase64("audios/intro_1.wav"),
+                lipsync: await readJsonTranscript("audios/intro_1.json"),
+                facialExpression: "sad",
+                animation: "Crying",
+            },
+        ];
+
+        defaultMessages.forEach(message => {
+            conversationContext.push({
+                role: "bot",
+                content: message.text,
+            });
         });
+
+        res.send({ messages: defaultMessages });
         return;
     }
 
+    // Push user's message to the conversation context
     conversationContext.push({
         role: "user",
-        content: userMessage
+        content: userMessage,
     });
 
     const payload = {
         messages: conversationContext,
         temperature: 0.6,
         top_p: 0.95,
-        max_tokens: 1000
+        max_tokens: 1000,
     };
 
     console.log("Payload for Azure API:", JSON.stringify(payload, null, 2));
@@ -117,9 +125,9 @@ app.post("/chat", async (req, res) => {
             payload,
             {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'api-key': azureApiKey
-                }
+                    "Content-Type": "application/json",
+                    "api-key": azureApiKey,
+                },
             }
         );
 
@@ -132,41 +140,40 @@ app.post("/chat", async (req, res) => {
 
         console.log("Parsed messages from Azure API:", messages);
         for (let i = 0; i < messages.length; i++) {
-          const message = messages[i];
-          const fileName = `audios/message_${i}.mp3`;
-          const textInput = message.text;
-      
-          console.log(`Processing message ${i}: ${textInput}`);
-      
-          try {
-              console.log('Parameters for Eleven Labs TTS API:', {
-                apiKey: elevenLabsApiKey,
-                voiceID: voiceID,
-                fileName: fileName,
-                textInput: textInput,
-              }); 
-              // Generate audio file
-              await voice.textToSpeech(elevenLabsApiKey, voiceID, fileName, textInput);
-              console.log(`Text-to-speech completed for message ${i}`);
-              
-              // Generate lipsync
-              await lipSyncMessage(i);
-              console.log(`Lip sync completed for message ${i}`);
-      
-              // Add audio and lipsync data to message
-              message.audio = await audioFileToBase64(fileName);
-              message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
-              console.log(`Audio and lipsync data added to message ${i}`);
-          } catch (error) {
-              console.error(`Error processing message ${i}:`, error.message);
-              throw error; // Stop processing further messages if an error occurs
-          }
-      }
-      
+            const message = messages[i];
+            const fileName = `audios/message_${i}.mp3`;
+            const textInput = message.text;
+
+            console.log(`Processing message ${i}: ${textInput}`);
+
+            try {
+                // Generate audio file
+                await voice.textToSpeech(elevenLabsApiKey, voiceID, fileName, textInput);
+                console.log(`Text-to-speech completed for message ${i}`);
+
+                // Generate lipsync
+                await lipSyncMessage(i);
+                console.log(`Lip sync completed for message ${i}`);
+
+                // Add audio and lipsync data to message
+                message.audio = await audioFileToBase64(fileName);
+                message.lipsync = await readJsonTranscript(`audios/message_${i}.json`);
+                console.log(`Audio and lipsync data added to message ${i}`);
+            } catch (error) {
+                console.error(`Error processing message ${i}:`, error.message);
+                throw error; // Stop processing further messages if an error occurs
+            }
+
+            // Push bot's message to the conversation context
+            conversationContext.push({
+                role: "assistant",
+                content: message.text,
+            });
+        }
 
         res.send({ messages });
     } catch (error) {
-        console.error('Azure API error:', error.response ? error.response.data : error.message);
+        console.error("Azure API error:", error.response ? error.response.data : error.message);
         res.status(500).send({ error: "An error occurred while processing your request." });
     }
 });
